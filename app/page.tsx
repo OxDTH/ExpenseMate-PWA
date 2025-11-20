@@ -1,12 +1,16 @@
 'use client';
 
 import { useState } from "react";
-import { Menu, Bell, Plus, HomeIcon, BarChart3, Wallet, User } from 'lucide-react';
+import { Menu, Bell, Plus, HomeIcon, BarChart3, Wallet, User, Sun, Moon } from 'lucide-react';
 import DebitCard from './components/DebitCard';
 import TransactionsList, { Transaction } from './components/TransactionsList';
+import MobileMenuBar from './components/MobileMenuBar';
+import { useTheme } from './context/ThemeContext';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('home');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   // Sample data - replace with real data later
   const totalBalance = 5420.50;
@@ -62,27 +66,53 @@ export default function Home() {
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex flex-col h-screen transition-colors duration-500" style={{ backgroundColor: 'var(--background)' }}>
       {/* Top Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-800 shadow-sm">
-        <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-          <Menu className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+      <header className="flex items-center justify-between px-6 py-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-sm transition-colors duration-500">
+        <button 
+          onClick={() => setIsMenuOpen(true)}
+          className="p-2 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 rounded-lg transition-colors"
+        >
+          <Menu className="w-6 h-6 text-gray-900 dark:text-gray-100" />
         </button>
 
         <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-purple-600">
           XpenseMate
         </h1>
 
-        <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors relative">
-          <span className="inline-block animate-pulse">
-            <Bell className="w-6 h-6 text-gray-700 dark:text-gray-200" />
-          </span>
-          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Theme Toggle - Desktop Only */}
+          <button 
+            onClick={toggleTheme}
+            className="hidden md:flex p-2 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 rounded-lg transition-all duration-300"
+            aria-label="Toggle theme"
+          >
+            {theme === 'light' ? (
+              <Moon className="w-6 h-6 text-gray-900 dark:text-gray-100" />
+            ) : (
+              <Sun className="w-6 h-6 text-gray-900 dark:text-gray-100" />
+            )}
+          </button>
+
+          <button className="p-2 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 rounded-lg transition-colors relative">
+            <span className="inline-block animate-pulse">
+              <Bell className="w-6 h-6 text-gray-900 dark:text-gray-100" />
+            </span>
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+        </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-6">
+      {/* Mobile Menu Drawer */}
+      <MobileMenuBar 
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+      />
+
+      <main className="flex-1 overflow-y-auto p-6 transition-colors duration-500">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Debit Card */}
           <DebitCard 
@@ -100,7 +130,7 @@ export default function Home() {
 
         {/* Floating Add Button (Smaller) */}
         <div className="absolute left-1/2 -translate-x-1/2 -top-10 z-20">
-          <button className="flex items-center justify-center w-14 h-14 mt-4 bg-linear-to-r from-blue-600 to-purple-600 rounded-full shadow-xl hover:shadow-2xl transition-all hover:scale-110 active:scale-95">
+          <button className="flex items-center justify-center w-14 h-14 mt-4 bg-linear-to-r from-blue-600 to-purple-600 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95">
             <Plus className="w-7 h-7 text-white" />
           </button>
         </div>
@@ -108,8 +138,8 @@ export default function Home() {
         {/* Deeper cut-out bottom nav */}
         <div
           className="
-            bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg
-            h-20 flex items-center justify-around px-4 relative
+            bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-t border-gray-300 dark:border-gray-700 shadow-lg
+            h-20 flex items-center justify-around px-4 relative transition-colors duration-500
           "
           style={{
             WebkitMask:
@@ -121,8 +151,8 @@ export default function Home() {
           {/* Home */}
           <button
             onClick={() => setActiveTab('home')}
-            className={`flex flex-col items-center w-16 ${
-              activeTab === 'home' ? 'text-blue-600' : 'text-gray-500 dark:text-gray-400'
+            className={`flex flex-col items-center w-16 transition-colors duration-300 ${
+              activeTab === 'home' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
             }`}
           >
             <span className={`inline-block transform transition-all duration-200 ${
@@ -136,8 +166,8 @@ export default function Home() {
           {/* Overview */}
           <button
             onClick={() => setActiveTab('overview')}
-            className={`flex flex-col items-center w-16 ${
-              activeTab === 'overview' ? 'text-blue-600' : 'text-gray-500 dark:text-gray-400'
+            className={`flex flex-col items-center w-16 transition-colors duration-300 ${
+              activeTab === 'overview' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
             }`}
           >
             <span className={`inline-block transform transition-all duration-200 ${
@@ -153,8 +183,8 @@ export default function Home() {
           {/* Wallet */}
           <button
             onClick={() => setActiveTab('wallet')}
-            className={`flex flex-col items-center w-16 ${
-              activeTab === 'wallet' ? 'text-blue-600' : 'text-gray-500 dark:text-gray-400'
+            className={`flex flex-col items-center w-16 transition-colors duration-300 ${
+              activeTab === 'wallet' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
             }`}
           >
             <span className={`inline-block transform transition-all duration-200 ${
@@ -168,8 +198,8 @@ export default function Home() {
           {/* Account */}
           <button
             onClick={() => setActiveTab('account')}
-            className={`flex flex-col items-center w-16 ${
-              activeTab === 'account' ? 'text-blue-600' : 'text-gray-500 dark:text-gray-400'
+            className={`flex flex-col items-center w-16 transition-colors duration-300 ${
+              activeTab === 'account' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
             }`}
           >
             <span className={`inline-block transform transition-all duration-200 ${

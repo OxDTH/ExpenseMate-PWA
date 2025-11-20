@@ -9,12 +9,12 @@ interface DebitCardProps {
 
 export default function DebitCard({ totalBalance, income, expenses }: DebitCardProps) {
   return (
-    <div className="relative w-full h-56 bg-linear-to-br from-slate-800 via-slate-900 to-black rounded-2xl shadow-2xl p-6 text-white overflow-hidden">
+    <div className="relative w-full h-56 bg-linear-to-br from-slate-800 via-slate-900 to-black rounded-2xl shadow-2xl p-6 text-white overflow-hidden transition-all duration-500">
       {/* Metallic gradient overlay */}
-      <div className="absolute inset-0 bg-linear-to-br from-transparent via-white/5 to-transparent"></div>
+      <div className="absolute inset-0 bg-linear-to-br from-transparent via-white/5 to-transparent transition-all duration-500"></div>
       
-      <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-br from-amber-500/20 to-transparent rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-32 h-32 bg-linear-to-tr from-blue-500/20 to-transparent rounded-full blur-2xl"></div>
+      <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-br from-amber-500/20 to-transparent rounded-full blur-3xl transition-all duration-500"></div>
+      <div className="absolute bottom-0 left-0 w-32 h-32 bg-linear-to-tr from-blue-500/20 to-transparent rounded-full blur-2xl transition-all duration-500"></div>
       
       <div className="relative z-10 h-full flex flex-col justify-between">
         <div className="flex items-start justify-between">
